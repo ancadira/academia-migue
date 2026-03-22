@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia Migue 🌿</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0faf3;
+  --bg2:#ffffff;
+  --bg3:#e4f5e9;
+  --card:#ffffff;
+  --card2:#f4faf6;
+  --card3:#e8f5ec;
+  --g1:#1a8c50;   /* deep green */
+  --g2:#00c853;   /* vivid green */
+  --g3:#43a047;   /* mid green */
+  --g4:#1b5e20;   /* deep green */
+  --g5:#69f0ae;   /* mint */
+  --g6:#b9f6ca;   /* pale mint */
+  --gold:#ffd740;
+  --orange:#ff6d00;
+  --text:#1a2e1e;
+  --text2:#3d6b4a;
+  --text3:#7aaa88;
+  --radius:18px;
+  --radius-sm:12px;
+}
+html{font-size:16px}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* ── Animated bg ── */
+.bg-glow{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.bg-glow::before{
+  content:'';position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,140,80,0.06) 0%,transparent 70%);
+  top:-100px;left:-100px;
+  animation:drift1 12s ease-in-out infinite alternate;
+}
+.bg-glow::after{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,204,113,0.04) 0%,transparent 70%);
+  bottom:-80px;right:-80px;
+  animation:drift2 15s ease-in-out infinite alternate;
+}
+@keyframes drift1{to{transform:translate(60px,40px)}}
+@keyframes drift2{to{transform:translate(-40px,-60px)}}
+
+/* ── Grid pattern overlay ── */
+.grid-overlay{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,200,83,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,83,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+.app{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:14px 12px}
+
+/* ── TOP HEADER ── */
+.header{
+  background:linear-gradient(135deg,var(--bg3),var(--card));
+  border:1px solid rgba(0,200,83,0.25);
+  border-radius:24px;padding:18px 22px;margin-bottom:14px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
+  box-shadow:0 0 40px rgba(0,200,83,0.08);
+}
+.avatar{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(135deg,var(--g4),var(--g2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.6rem;
+  border:3px solid var(--g1);
+  box-shadow:0 0 20px rgba(0,255,135,0.4),0 0 60px rgba(0,255,135,0.1);
+  cursor:pointer;transition:transform .2s;flex-shrink:0;
+}
+.avatar:hover{transform:scale(1.06) rotate(-3deg)}
+.hero-mid h1{
+  font-family:'Fredoka One',cursive;
+  font-size:1.85rem;line-height:1.1;
+  background:linear-gradient(90deg,var(--g1),var(--g5),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:3px;
+}
+.hero-mid p{font-size:0.82rem;color:var(--text2);margin-bottom:10px}
+.xp-label{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--text2);margin-bottom:4px}
+.xp-label strong{color:var(--g1);font-weight:800}
+.xp-track{height:16px;background:#d4edda;border-radius:20px;border:1px solid rgba(26,140,80,0.2);overflow:hidden;position:relative}
+.xp-fill{
+  height:100%;border-radius:20px;
+  background:linear-gradient(90deg,var(--g4),var(--g2),var(--g1));
+  transition:width 0.9s cubic-bezier(.34,1.56,.64,1);position:relative;
+}
+.xp-fill::after{content:'';position:absolute;top:3px;left:10px;right:10px;height:5px;background:rgba(255,255,255,0.2);border-radius:10px}
+.level-pill{
+  display:inline-block;margin-top:8px;
+  background:linear-gradient(90deg,var(--g3),var(--g5));
+  color:#fff;font-weight:900;font-size:0.72rem;
+  padding:4px 14px;border-radius:20px;letter-spacing:0.5px;
+  font-family:'Fredoka One',cursive;
+}
+.streak-zone{text-align:center;flex-shrink:0}
+.streak-num{font-family:'Fredoka One',cursive;font-size:2.4rem;color:var(--gold);line-height:1}
+.streak-label{font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px}
+.streak-fire{font-size:1.6rem}
+
+/* ── STATS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat-card{
+  background:var(--card);border:1px solid rgba(0,200,83,0.12);
+  border-radius:var(--radius-sm);padding:12px 8px;text-align:center;
+  transition:transform .2s,box-shadow .2s;cursor:default;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,200,83,0.15)}
+.stat-icon{font-size:1.3rem;margin-bottom:4px}
+.stat-val{font-family:'Fredoka One',cursive;font-size:1.6rem;line-height:1}
+.stat-lbl{font-size:0.65rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px}
+
+/* ── RETO DIARIO ── */
+.reto-banner{
+  background:linear-gradient(135deg,#e8f8ee,#f0fdf4);
+  border:1px solid rgba(0,255,135,0.3);border-radius:var(--radius);
+  padding:16px 20px;margin-bottom:14px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 0 20px rgba(0,255,135,0.08);
+  cursor:pointer;transition:all .2s;
+}
+.reto-banner:hover{border-color:rgba(0,255,135,0.5);box-shadow:0 0 30px rgba(0,255,135,0.15)}
+.reto-icon-big{font-size:2.2rem;flex-shrink:0}
+.reto-body{flex:1}
+.reto-tag{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--g1);margin-bottom:3px}
+.reto-text{font-weight:800;font-size:0.95rem;color:var(--text);line-height:1.3}
+.reto-xp{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--gold);white-space:nowrap}
+.reto-done-badge{
+  background:rgba(0,200,83,0.2);border:1px solid var(--g2);
+  color:var(--g1);font-size:0.75rem;font-weight:700;
+  padding:4px 10px;border-radius:20px;white-space:nowrap;
+}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{
+  background:var(--card);border:1px solid rgba(0,200,83,0.15);
+  color:var(--text2);font-family:'Nunito',sans-serif;font-weight:700;
+  font-size:0.8rem;padding:8px 14px;border-radius:30px;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.tab.active{
+  background:linear-gradient(135deg,var(--g3),var(--g5));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 15px rgba(0,200,83,0.35);
+}
+.tab:hover:not(.active){border-color:var(--g3);color:var(--g3)}
+
+.panel{display:none}.panel.active{display:block}
+.section-title{
+  font-family:'Fredoka One',cursive;font-size:1.1rem;
+  color:var(--g3);margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(0,200,83,0.15)}
+
+/* ── FORM ── */
+.registro-card{
+  background:var(--card);border:1px solid rgba(0,200,83,0.15);
+  border-radius:var(--radius);padding:20px;margin-bottom:14px;
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+label{font-size:0.72rem;color:var(--text2);font-weight:800;text-transform:uppercase;letter-spacing:0.6px}
+input,select,textarea{
+  background:var(--bg2);border:1px solid rgba(0,200,83,0.2);
+  color:var(--text);font-family:'Nunito',sans-serif;font-size:0.9rem;
+  padding:9px 12px;border-radius:var(--radius-sm);
+  transition:border-color .2s,box-shadow .2s;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--g2);box-shadow:0 0 0 3px rgba(0,200,83,0.1)}
+select option{background:var(--bg2)}
+textarea{resize:vertical;min-height:65px}
+.humor-row{display:flex;gap:8px;flex-wrap:wrap}
+.humor-btn{
+  background:var(--bg2);border:2px solid rgba(0,200,83,0.15);
+  border-radius:10px;padding:7px 12px;cursor:pointer;
+  font-size:1rem;transition:all .15s;
+}
+.humor-btn.selected{border-color:var(--g1);background:rgba(0,255,135,0.08);transform:scale(1.12)}
+.nota-display{
+  font-family:'Fredoka One',cursive;font-size:2rem;
+  text-align:center;min-width:60px;transition:color .3s;
+}
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:8px;
+  background:linear-gradient(90deg,var(--g4),var(--g2),var(--g1));
+  border-radius:10px;padding:0;border:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;border:3px solid var(--g2);cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--g4),var(--g2),var(--g1));
+  color:var(--bg);border:none;font-family:'Fredoka One',cursive;font-size:1rem;
+  padding:13px 28px;border-radius:30px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,200,83,0.4);
+  transition:transform .15s,box-shadow .15s;width:100%;margin-top:8px;
+  letter-spacing:0.5px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(0,200,83,0.6)}
+.btn-primary:active{transform:scale(0.98)}
+
+/* ── HISTORIAL ── */
+.activity-list{display:flex;flex-direction:column;gap:8px}
+.activity-item{
+  background:var(--card);border:1px solid rgba(0,200,83,0.1);
+  border-radius:var(--radius-sm);padding:12px 16px;
+  display:grid;grid-template-columns:10px 1fr auto auto;
+  align-items:center;gap:12px;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.act-name{font-weight:700;font-size:0.9rem}
+.act-meta{font-size:0.72rem;color:var(--text3);margin-top:2px}
+.act-xp{font-family:'Fredoka One',cursive;font-size:0.9rem;color:var(--gold);white-space:nowrap}
+.nota-chip{font-weight:800;font-size:0.82rem;padding:3px 8px;border-radius:8px}
+.n-high{background:rgba(0,200,83,0.18);color:var(--g1)}
+.n-mid{background:rgba(255,215,64,0.15);color:var(--gold)}
+.n-low{background:rgba(255,109,0,0.15);color:var(--orange)}
+
+/* ── PROGRESO ── */
+.area-list{display:flex;flex-direction:column;gap:8px}
+.area-row{background:var(--card);border-radius:var(--radius-sm);padding:14px 16px;border:1px solid rgba(0,200,83,0.08)}
+.area-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.area-name{font-weight:800;font-size:0.88rem;display:flex;align-items:center;gap:8px}
+.area-stats-txt{font-size:0.72rem;color:var(--text3)}
+.area-track{height:10px;background:var(--bg2);border-radius:10px;overflow:hidden}
+.area-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--g4),var(--g1));transition:width 1s cubic-bezier(.34,1.56,.64,1)}
+
+/* ── GRÁFICA ── */
+.chart-wrap{
+  background:var(--card);border:1px solid rgba(0,200,83,0.12);
+  border-radius:var(--radius);padding:20px;margin-bottom:14px;
+}
+.chart-title{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--g1);margin-bottom:14px}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:140px;padding-bottom:28px;position:relative;border-bottom:1px solid rgba(0,200,83,0.15)}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;height:100%;justify-content:flex-end;position:relative}
+.bar{
+  width:100%;border-radius:6px 6px 0 0;
+  background:linear-gradient(180deg,var(--g1),var(--g3));
+  transition:height .8s cubic-bezier(.34,1.56,.64,1);
+  min-height:2px;position:relative;
+}
+.bar:hover{filter:brightness(1.2)}
+.bar-val{font-size:0.65rem;color:var(--g1);font-weight:700;position:absolute;top:-18px;width:100%;text-align:center}
+.bar-lbl{font-size:0.62rem;color:var(--text3);margin-top:4px;position:absolute;bottom:-22px;white-space:nowrap}
+.chart-empty{text-align:center;color:var(--text3);padding:24px;font-size:0.85rem}
+
+/* ── LOGROS ── */
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+.badge{
+  background:var(--card);border:1px solid rgba(0,200,83,0.1);
+  border-radius:var(--radius);padding:14px 10px;text-align:center;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.badge.unlocked{
+  border-color:var(--g1);
+  background:linear-gradient(135deg,rgba(0,255,135,0.08),rgba(0,200,83,0.05));
+  box-shadow:0 0 16px rgba(0,255,135,0.15);
+}
+.badge.locked{opacity:0.35;filter:grayscale(0.7)}
+.badge-icon{font-size:2rem;margin-bottom:6px}
+.badge-name{font-size:0.72rem;font-weight:800;color:var(--text);margin-bottom:3px}
+.badge-desc{font-size:0.62rem;color:var(--text3);line-height:1.3}
+.badge-check{
+  position:absolute;top:6px;right:6px;
+  background:var(--g2);color:var(--bg);
+  font-size:0.6rem;font-weight:900;padding:2px 6px;border-radius:10px;
+}
+
+/* ── TIENDA ── */
+.tienda-header{
+  background:var(--card);border:1px solid rgba(255,215,64,0.2);
+  border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.coins-display{display:flex;align-items:center;gap:10px}
+.coins-icon{font-size:1.8rem}
+.coins-val{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--gold)}
+.coins-lbl{font-size:0.72rem;color:var(--text2)}
+.btn-add-reward{
+  background:linear-gradient(135deg,var(--g4),var(--g2));
+  color:var(--text);border:none;font-family:'Nunito',sans-serif;font-weight:800;
+  font-size:0.8rem;padding:8px 16px;border-radius:20px;cursor:pointer;
+  transition:all .2s;
+}
+.btn-add-reward:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,200,83,0.3)}
+.rewards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.reward-card{
+  background:var(--card);border:1px solid rgba(255,215,64,0.15);
+  border-radius:var(--radius);padding:16px 14px;text-align:center;
+  transition:all .2s;position:relative;
+}
+.reward-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(212,160,0,0.15)}
+.reward-icon{font-size:2.2rem;margin-bottom:8px}
+.reward-name{font-weight:800;font-size:0.88rem;margin-bottom:4px}
+.reward-cost{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--gold);margin-bottom:10px}
+.btn-canjear{
+  background:linear-gradient(90deg,var(--gold),#ffab00);
+  color:var(--bg);border:none;font-weight:900;font-size:0.78rem;
+  padding:6px 16px;border-radius:20px;cursor:pointer;transition:all .15s;width:100%;
+}
+.btn-canjear:hover{transform:scale(1.04);box-shadow:0 4px 12px rgba(255,215,64,0.4)}
+.btn-canjear:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.btn-delete-reward{
+  position:absolute;top:6px;right:8px;background:none;border:none;
+  color:var(--text3);font-size:0.8rem;cursor:pointer;opacity:0.5;
+  transition:opacity .2s;
+}
+.btn-delete-reward:hover{opacity:1;color:var(--orange)}
+
+/* ── Tarea hogar buttons ── */
+.tarea-btn{
+  display:flex;align-items:center;gap:9px;
+  background:var(--card2);
+  border:1.5px solid rgba(0,200,83,0.15);
+  border-radius:12px;
+  padding:10px 12px;
+  cursor:pointer;
+  transition:all .18s;
+  text-align:left;
+  font-family:'Nunito',sans-serif;
+  width:100%;
+}
+.tarea-btn:hover{
+  border-color:var(--g2);
+  background:var(--card3);
+  transform:translateY(-1px);
+  box-shadow:0 3px 10px rgba(0,200,83,0.12);
+}
+.tarea-btn.selected{
+  border-color:var(--g1);
+  background:#e8f8ee;
+  box-shadow:0 0 0 2px rgba(0,200,83,0.2);
+}
+.tarea-icon{font-size:1.3rem;flex-shrink:0;line-height:1}
+.tarea-info{display:flex;flex-direction:column;gap:1px;min-width:0}
+.tarea-name{
+  font-size:0.82rem;font-weight:700;
+  color:var(--text);
+  line-height:1.2;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.tarea-val{
+  font-family:'Fredoka One',cursive;
+  font-size:0.78rem;
+  color:var(--g3);
+}
+/* hogar history items */
+.hogar-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);
+  border:1px solid rgba(0,200,83,0.12);
+  border-radius:12px;
+  padding:10px 13px;
+  font-family:'Nunito',sans-serif;
+}
+.hogar-item.pagado{opacity:0.5;filter:grayscale(0.3)}
+.hi-icon{font-size:1.3rem;flex-shrink:0}
+.hi-info{flex:1;min-width:0}
+.hi-name{font-weight:700;font-size:0.88rem;color:var(--text)}
+.hi-meta{font-size:0.72rem;color:var(--text3);margin-top:1px}
+.hi-val{font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--g3);white-space:nowrap}
+.hi-status{
+  font-size:0.65rem;padding:3px 8px;border-radius:8px;
+  font-weight:800;white-space:nowrap;font-family:'Nunito',sans-serif;
+}
+.hi-status.pend{background:rgba(212,160,0,0.12);color:var(--gold)}
+.hi-status.paid{background:rgba(0,200,83,0.1);color:var(--g3)}
+
+/* add reward modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.8);
+  display:none;align-items:center;justify-content:center;z-index:999;
+}
+.modal-overlay.show{display:flex}
+.modal-box{
+  background:var(--card2);border:1px solid rgba(0,200,83,0.3);
+  border-radius:24px;padding:28px;width:90%;max-width:360px;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-title{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--g1);margin-bottom:16px}
+.modal-form{display:flex;flex-direction:column;gap:10px}
+.modal-actions{display:flex;gap:10px;margin-top:8px}
+.btn-cancel{
+  background:var(--card);border:1px solid rgba(0,200,83,0.2);
+  color:var(--text2);font-family:'Nunito',sans-serif;font-weight:700;
+  padding:10px 20px;border-radius:20px;cursor:pointer;flex:1;font-size:0.85rem;
+}
+.btn-save{
+  background:linear-gradient(90deg,var(--g3),var(--g2));
+  color:var(--text);border:none;font-family:'Nunito',sans-serif;font-weight:800;
+  padding:10px 20px;border-radius:20px;cursor:pointer;flex:1;font-size:0.85rem;
+}
+
+/* ── MISIONES ── */
+.misiones-list{display:flex;flex-direction:column;gap:8px}
+.mision{
+  background:var(--card);border:1px solid rgba(0,200,83,0.1);
+  border-radius:var(--radius-sm);padding:12px 16px;
+  display:flex;align-items:center;gap:12px;transition:all .2s;
+}
+.mision.done{opacity:0.55;background:rgba(0,200,83,0.04);border-color:rgba(0,200,83,0.2)}
+.mision-icon{font-size:1.4rem;flex-shrink:0}
+.mision-body{flex:1}
+.mision-name{font-weight:800;font-size:0.88rem;margin-bottom:2px}
+.mision-desc{font-size:0.72rem;color:var(--text3)}
+.mision-right{text-align:right;flex-shrink:0}
+.mision-xp{font-family:'Fredoka One',cursive;font-size:0.9rem;color:var(--gold)}
+.mision-check{font-size:1.1rem}
+
+/* ── LEVELUP ── */
+.levelup-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  display:none;align-items:center;justify-content:center;z-index:1001;flex-direction:column;
+}
+.levelup-overlay.show{display:flex}
+.levelup-box{
+  background:linear-gradient(135deg,var(--bg3),var(--card2));
+  border:2px solid var(--g1);border-radius:28px;padding:40px 36px;text-align:center;
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1);max-width:340px;width:90%;
+  box-shadow:0 0 60px rgba(0,255,135,0.3);
+}
+.levelup-emoji{font-size:4.5rem;margin-bottom:10px;
+  animation:bounce 0.6s ease infinite alternate}
+@keyframes bounce{to{transform:translateY(-10px)}}
+.levelup-title{font-family:'Fredoka One',cursive;font-size:2rem;
+  background:linear-gradient(90deg,var(--g1),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.levelup-sub{font-size:0.9rem;color:var(--text2);line-height:1.5}
+.btn-close-lu{
+  background:linear-gradient(90deg,var(--g4),var(--g2));
+  color:var(--text);border:none;font-family:'Fredoka One',cursive;
+  padding:12px 32px;border-radius:30px;cursor:pointer;
+  margin-top:20px;font-size:1rem;
+  box-shadow:0 4px 20px rgba(0,200,83,0.4);
+}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(110px);
+  background:linear-gradient(135deg,var(--g4),var(--g2));
+  color:var(--text);font-weight:700;padding:12px 22px;border-radius:30px;
+  font-size:0.88rem;z-index:1000;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 24px rgba(0,200,83,0.5);
+  white-space:nowrap;max-width:92vw;text-align:center;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:580px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+  .header{grid-template-columns:auto 1fr}
+  .streak-zone{display:none}
+  .badges-grid{grid-template-columns:repeat(2,1fr)}
+  .rewards-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="grid-overlay"></div>
+
+<!-- Level Up -->
+<div class="levelup-overlay" id="luOverlay">
+  <div class="levelup-box">
+    <div class="levelup-emoji" id="luEmoji">🌿</div>
+    <div class="levelup-title" id="luTitle">¡Nivel 2!</div>
+    <div class="levelup-sub" id="luSub">¡Eres increíble, Migue!</div>
+    <button class="btn-close-lu" onclick="closeLU()">¡A seguir! 🚀</button>
+  </div>
+</div>
+
+<!-- Add reward modal -->
+<div class="modal-overlay" id="rewardModal">
+  <div class="modal-box">
+    <div class="modal-title">➕ Nueva recompensa</div>
+    <div class="modal-form">
+      <div class="form-group">
+        <label>Emoji / ícono</label>
+        <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:8px" id="emojiPickerR"></div>
+        <input type="text" id="r-icon" placeholder="🎮" maxlength="4" style="font-size:1.3rem;text-align:center;width:100%;background:var(--bg2);border:1px solid rgba(0,255,135,0.2);color:var(--text);font-family:'Nunito',sans-serif;padding:8px;border-radius:9px;outline:none" oninput="syncEmojiPicker(this.value)">
+      </div>
+      <div class="form-group">
+        <label>Nombre del premio</label>
+        <input type="text" id="r-name" placeholder="ej: 1 hora de videojuegos">
+      </div>
+      <div class="form-group">
+        <label>Costo en XP 🌿</label>
+        <input type="number" id="r-cost" placeholder="200" min="10" max="9999">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeRewardModal()">Cancelar</button>
+        <button class="btn-save" onclick="saveReward()">¡Guardar! ✅</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="avatar" id="avatarEl" title="¡Tú eres Migue!">🌱</div>
+    <div class="hero-mid">
+      <h1 id="heroTitle">Academia de Migue 🌿</h1>
+      <p id="heroSub">¡Hola Migue! ¿Listo para aprender algo increíble hoy?</p>
+      <div class="xp-label">
+        <span>⚡ Experiencia</span>
+        <strong id="xpLbl">0 XP</strong>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xpBar" style="width:0%"></div></div>
+      <div class="level-pill" id="lvPill">NIVEL 1 — Semillita 🌱</div>
+      <button onclick="openLevelGuide()" style="background:rgba(0,255,135,0.08);border:1px solid rgba(0,255,135,0.2);color:var(--g1);font-family:'Nunito',sans-serif;font-size:0.72rem;font-weight:700;padding:4px 12px;border-radius:14px;cursor:pointer;margin-top:7px;display:inline-block">📊 Ver todos los niveles</button>
+    </div>
+    <div class="streak-zone">
+      <div class="streak-fire">🔥</div>
+      <div class="streak-num" id="streakNum">0</div>
+      <div class="streak-label">días seguidos</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">⭐</div>
+      <div class="stat-val" id="sXP" style="color:var(--g1)">0</div>
+      <div class="stat-lbl">XP Total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📚</div>
+      <div class="stat-val" id="sActs" style="color:var(--g5)">0</div>
+      <div class="stat-lbl">Actividades</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-val" id="sHoras" style="color:var(--g2)">0h</div>
+      <div class="stat-lbl">Horas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🪙</div>
+      <div class="stat-val" id="sMonedas" style="color:var(--gold)">0</div>
+      <div class="stat-lbl">Monedas</div>
+    </div>
+  </div>
+
+  <!-- RETO DIARIO -->
+  <div class="reto-banner" id="retoBanner">
+    <div class="reto-icon-big" id="retoIcon">🎯</div>
+    <div class="reto-body">
+      <div class="reto-tag">🌟 Reto del día</div>
+      <div class="reto-text" id="retoText">Cargando reto...</div>
+      <div class="reto-xp" id="retoXP" style="margin-top:4px"></div>
+    </div>
+    <div id="retoRight" style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+      <button id="retoBtnCompletar" onclick="completarReto()" style="background:linear-gradient(135deg,var(--g3),var(--g5));color:#fff;border:none;font-family:'Fredoka One',cursive;font-size:0.82rem;padding:8px 14px;border-radius:18px;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(26,140,80,0.3);transition:all .15s">¡Lo hice! ✅</button>
+      <button id="retoBtnOtro" onclick="pedirOtroReto()" style="display:none;background:#f0faf3;border:1.5px solid rgba(26,140,80,0.25);color:var(--g3);font-family:'Nunito',sans-serif;font-size:0.75rem;font-weight:700;padding:5px 11px;border-radius:14px;cursor:pointer;white-space:nowrap">🎲 Otro reto</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('registrar',this)">✏️ Registrar</button>
+    <button class="tab" onclick="showTab('historial',this)">📋 Historial</button>
+    <button class="tab" onclick="showTab('progreso',this)">📈 Progreso</button>
+    <button class="tab" onclick="showTab('logros',this)">🏅 Logros</button>
+    <button class="tab" onclick="showTab('misiones',this)">🎯 Misiones</button>
+    <button class="tab" onclick="showTab('hogar',this)">🏠 Hogar</button>
+    <button class="tab" onclick="showTab('tienda',this)">🛒 Tienda</button>
+    <button class="tab" onclick="showTab('backup',this)">💾 Datos</button>
+  </div>
+
+  <!-- REGISTRAR -->
+  <div class="panel active" id="panel-registrar">
+    <div class="section-title">✏️ ¿Qué aprendiste hoy, Migue?</div>
+    <div class="registro-card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>📅 Fecha</label>
+          <input type="date" id="f-fecha">
+        </div>
+        <div class="form-group">
+          <label>🎯 Área</label>
+          <select id="f-area">
+            <option value="">Selecciona...</option>
+            <option value="Matemáticas">🧮 Matemáticas y lógica</option>
+            <option value="Inglés">🌎 Inglés / idiomas</option>
+            <option value="Digital">💻 Habilidades digitales</option>
+            <option value="Finanzas">💰 Finanzas / Excel</option>
+            <option value="Ciencia">🔬 Ciencia / experimentos</option>
+            <option value="Arte">🎨 Arte / manualidades</option>
+            <option value="Deporte">⚽ Deporte / salud</option>
+            <option value="Piano">🎹 Piano / música</option>
+            <option value="Lectura">📚 Lectura / hábitos</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>📝 ¿Qué hiciste?</label>
+          <input type="text" id="f-actividad" placeholder="ej: Experimento del volcán con vinagre">
+        </div>
+        <div class="form-group">
+          <label>⏱️ Minutos</label>
+          <input type="number" id="f-minutos" placeholder="30" min="5" max="300">
+        </div>
+        <div class="form-group">
+          <label>🛠️ Recurso usado</label>
+          <input type="text" id="f-recurso" placeholder="ej: Scratch, Duolingo...">
+        </div>
+        <div class="form-group full">
+          <label>💡 ¿Qué aprendiste?</label>
+          <textarea id="f-aprendizaje" placeholder="Cuéntame lo más chévere que aprendiste hoy..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>⭐ Nota (solo si fue evaluación — deja en 0 si no)</label>
+          <div style="display:flex;align-items:center;gap:14px">
+            <input type="range" id="f-nota" min="0" max="10" step="0.5" value="0" style="flex:1" oninput="updateNota(this.value)">
+            <div class="nota-display" id="notaDisplay" style="color:var(--text3)">—</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:var(--text3);margin-top:2px">
+            <span>Sin nota</span><span>5</span><span>10 ⭐</span>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>😊 ¿Cómo te sentiste?</label>
+          <div class="humor-row">
+            <button class="humor-btn" onclick="selHumor(this,'😄')">😄 ¡Genial!</button>
+            <button class="humor-btn" onclick="selHumor(this,'😊')">😊 Bien</button>
+            <button class="humor-btn" onclick="selHumor(this,'😐')">😐 Normal</button>
+            <button class="humor-btn" onclick="selHumor(this,'😕')">😕 Regular</button>
+            <button class="humor-btn" onclick="selHumor(this,'😴')">😴 Cansado</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="registrar()">🚀 ¡Registrar y ganar XP!</button>
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="panel" id="panel-historial">
+    <div class="section-title">📋 Historial de Migue</div>
+    <div class="activity-list" id="actList">
+      <div style="text-align:center;color:var(--text3);padding:32px;font-size:0.9rem">¡Registra tu primera actividad! 🌱</div>
+    </div>
+  </div>
+
+  <!-- PROGRESO -->
+  <div class="panel" id="panel-progreso">
+    <div class="section-title">📊 Actividad semanal</div>
+    <div class="chart-wrap">
+      <div class="chart-title">Minutos por día — últimos 7 días</div>
+      <div class="bar-chart" id="weekChart"></div>
+    </div>
+    <div class="section-title">📈 Progreso por área</div>
+    <div class="area-list" id="areaList"></div>
+  </div>
+
+  <!-- LOGROS -->
+  <div class="panel" id="panel-logros">
+    <div class="section-title">🏅 Logros de Migue</div>
+    <div class="badges-grid" id="badgesGrid"></div>
+  </div>
+
+  <!-- MISIONES -->
+  <div class="panel" id="panel-misiones">
+    <div class="section-title">🎯 Misiones de esta semana</div>
+    <div class="misiones-list" id="misionesList"></div>
+  </div>
+
+  <!-- TIENDA -->
+
+  <!-- HOGAR -->
+  <div class="panel" id="panel-hogar">
+    <div class="section-title">🏠 Actividades del hogar</div>
+
+    <!-- Resumen dinero -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
+      <div style="background:var(--card);border:1px solid rgba(46,204,113,0.2);border-radius:14px;padding:14px;text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:3px">💵</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--g3)" id="h-ganado">$0</div>
+        <div style="font-size:0.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px">Total ganado</div>
+      </div>
+      <div style="background:var(--card);border:1px solid rgba(212,160,0,0.2);border-radius:14px;padding:14px;text-align:center">
+        <div style="font-size:1.2rem;margin-bottom:3px">⏳</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--gold)" id="h-pendiente">$0</div>
+        <div style="font-size:0.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px">Le debo a Migue</div>
+      </div>
+    </div>
+
+    <!-- Actividades predefinidas -->
+    <div class="section-title" style="font-size:1rem">🧹 Registrar actividad del hogar</div>
+    <div class="registro-card" style="margin-bottom:14px">
+      <div style="margin-bottom:11px">
+        <label class="form-label">📋 ¿Qué actividad hizo Migue?</label>
+        <div id="tareasGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:7px;margin-top:7px"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px">
+        <div>
+          <label style="font-size:0.72rem;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px">📅 Fecha</label>
+          <input type="date" id="h-fecha">
+        </div>
+        <div>
+          <label style="font-size:0.72rem;color:var(--text2);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:5px">📝 Nota (opcional)</label>
+          <input type="text" id="h-nota" placeholder="ej: bien hecho, rápido...">
+        </div>
+      </div>
+      <div id="h-selected-preview" style="display:none;background:rgba(0,255,135,0.07);border:1px solid rgba(0,255,135,0.2);border-radius:10px;padding:10px 14px;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between">
+        <span id="h-preview-text" style="font-weight:700;font-size:0.9rem">—</span>
+        <span id="h-preview-val" style="font-family:'Fredoka One',cursive;color:var(--g1);font-size:1rem">$0</span>
+      </div>
+      <button class="btn-primary" onclick="registrarHogar()">💵 Registrar y guardar lo que me deben</button>
+    </div>
+
+    <!-- Agregar nueva tarea custom -->
+    <div class="section-title" style="font-size:1rem">➕ Agregar nueva actividad de pago</div>
+    <div class="registro-card" style="margin-bottom:14px">
+      <div style="display:grid;grid-template-columns:50px 1fr 100px auto;gap:8px;align-items:flex-end">
+        <div>
+          <label class="form-label">Emoji</label>
+          <input type="text" id="nt-icon" placeholder="🧽" maxlength="4" style="text-align:center;font-size:1.2rem">
+        </div>
+        <div>
+          <label class="form-label">Nombre de la actividad</label>
+          <input type="text" id="nt-nombre" placeholder="ej: Limpiar ventanas">
+        </div>
+        <div>
+          <label class="form-label">Pago $</label>
+          <input type="number" id="nt-valor" placeholder="5000" min="500">
+        </div>
+        <button onclick="addTareaCustom()" class="btn-primary" style="padding:10px 14px;font-size:0.85rem;margin-top:0">Agregar</button>
+      </div>
+    </div>
+
+    <!-- Historial hogar -->
+    <div class="section-title" style="font-size:1rem">📋 Historial de tareas</div>
+    <div id="hogarList" style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+      <div style="text-align:center;color:var(--text3);padding:24px;font-size:0.88rem">Aún no hay tareas registradas 🌿</div>
+    </div>
+
+    <!-- Marcar como pagado -->
+    <div class="registro-card">
+      <div style="font-family:'Fredoka One',cursive;font-size:0.95rem;color:var(--gold);margin-bottom:6px">💸 Registrar pago de mamá</div>
+      <div style="font-size:0.78rem;color:var(--text3);margin-bottom:10px">Ingresa cuánto le pagaste a Migue para descontarlo del pendiente.</div>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <div style="flex:1;min-width:140px">
+          <label style="font-size:0.7rem;color:var(--text2);font-weight:700;text-transform:uppercase;display:block;margin-bottom:4px">Monto pagado $</label>
+          <input type="number" id="h-pago" placeholder="ej: 15000" min="1">
+        </div>
+        <button onclick="registrarPago()" style="background:linear-gradient(135deg,#7a5000,var(--gold));color:#1a1000;border:none;font-family:'Fredoka One',cursive;font-size:0.9rem;padding:10px 20px;border-radius:20px;cursor:pointer;white-space:nowrap">💵 Registrar pago</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-tienda">
+    <div class="section-title">🛒 Tienda de premios</div>
+    <div class="tienda-header">
+      <div class="coins-display">
+        <div class="coins-icon">🪙</div>
+        <div>
+          <div class="coins-val" id="tMonedas">0</div>
+          <div class="coins-lbl">XP disponibles para canjear</div>
+        </div>
+      </div>
+      <button class="btn-add-reward" onclick="openRewardModal()">➕ Agregar premio</button>
+    </div>
+    <div class="rewards-grid" id="rewardsGrid"></div>
+    <div style="background:var(--card);border:1px solid rgba(0,200,83,0.1);border-radius:var(--radius);padding:16px;margin-top:4px">
+      <div style="font-size:0.78rem;color:var(--text2);font-weight:700;margin-bottom:6px">💡 ¿Cómo funcionan las monedas?</div>
+      <div style="font-size:0.75rem;color:var(--text3);line-height:1.6">
+        Los premios de la tienda se canjean con <strong style="color:var(--g1)">XP de aprendizaje</strong>. ¡Tú defines los premios que Migue puede ganar con su esfuerzo!
+      </div>
+    </div>
+
+  <!-- BACKUP -->
+  <div class="panel" id="panel-backup">
+    <div class="section-title">💾 Mis datos</div>
+
+    <!-- Exportar -->
+    <div class="registro-card" style="margin-bottom:12px">
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--g3);margin-bottom:6px">📤 Exportar respaldo</div>
+      <div style="font-size:0.82rem;color:var(--text3);margin-bottom:12px;line-height:1.6">
+        Descarga un archivo con todos los datos de Migue. Guárdalo en Google Drive, WhatsApp o donde quieras. Si algún día se pierden los datos, lo importas y queda todo igual.
+      </div>
+      <button class="btn-primary" onclick="exportarDatos()">📥 Descargar respaldo</button>
+    </div>
+
+    <!-- Importar -->
+    <div class="registro-card" style="margin-bottom:12px">
+      <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--g3);margin-bottom:6px">📥 Importar respaldo</div>
+      <div style="font-size:0.82rem;color:var(--text3);margin-bottom:12px;line-height:1.6">
+        ¿Cambiaste de dispositivo o se perdieron los datos? Selecciona el archivo de respaldo y todo vuelve como estaba.
+      </div>
+      <label style="display:block;background:var(--card2);border:2px dashed rgba(0,200,83,0.25);border-radius:12px;padding:16px;text-align:center;cursor:pointer;transition:all .2s" id="importLabel" onmouseover="this.style.borderColor='var(--g2)'" onmouseout="this.style.borderColor='rgba(0,200,83,0.25)'">
+        <div style="font-size:1.8rem;margin-bottom:6px">📂</div>
+        <div style="font-size:0.85rem;font-weight:700;color:var(--text2)">Toca para seleccionar archivo</div>
+        <div style="font-size:0.72rem;color:var(--text3);margin-top:3px">Archivos .json de respaldo de Migue</div>
+        <input type="file" accept=".json" onchange="importarDatos(this)" style="display:none">
+      </label>
+    </div>
+
+    <!-- Info -->
+    <div style="background:var(--card);border:1px solid rgba(0,200,83,0.12);border-radius:12px;padding:14px">
+      <div style="font-size:0.78rem;color:var(--text2);font-weight:700;margin-bottom:8px">💡 Consejos</div>
+      <div style="font-size:0.75rem;color:var(--text3);line-height:1.8">
+        ✅ Haz un respaldo cada semana — tarda 2 segundos<br>
+        ✅ Guarda el archivo en Google Drive o en el chat de WhatsApp con mamá<br>
+        ✅ El archivo se llama <em>migue_backup_FECHA.json</em><br>
+        ✅ Si abres la app en otro dispositivo, importa el respaldo y listo
+      </div>
+    </div>
+
+    <!-- Stats actuales -->
+    <div style="margin-top:12px;background:var(--card);border:1px solid rgba(0,200,83,0.12);border-radius:12px;padding:14px">
+      <div style="font-size:0.78rem;color:var(--text2);font-weight:700;margin-bottom:10px">📊 Resumen de datos guardados</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="backupStats"></div>
+    </div>
+  </div>
+
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════ DATA ════════════════════════════════════════
+const LEVELS=[
+  {min:0,   name:"Semillita",    emoji:"🌱"},
+  {min:120, name:"Brote verde",  emoji:"🌿"},
+  {min:300, name:"Explorador",   emoji:"🧭"},
+  {min:600, name:"Aventurero",   emoji:"⚔️"},
+  {min:1000,name:"Guardián",     emoji:"🛡️"},
+  {min:1600,name:"Sabio verde",  emoji:"🧙"},
+  {min:2400,name:"Campeón",      emoji:"🏆"},
+  {min:3500,name:"Leyenda",      emoji:"🌟"},
+  {min:5000,name:"Gran Maestro", emoji:"👑"},
+];
+
+const ACOLORS={
+  "Matemáticas":"#69f0ae","Inglés":"#40c4ff","Digital":"#ffd740",
+  "Finanzas":"#b9f6ca","Ciencia":"#80cbc4","Arte":"#ff8a65",
+  "Deporte":"#ffb74d","Piano":"#f48fb1","Lectura":"#b0bec5"
+};
+const AICONS={"Matemáticas":"🧮","Inglés":"🌎","Digital":"💻","Finanzas":"💰","Ciencia":"🔬","Arte":"🎨","Deporte":"⚽","Piano":"🎹","Lectura":"📚"};
+
+const RETOS=[
+  {icon:"🧮",text:"Resuelve 10 problemas de matemáticas sin calculadora",xp:50},
+  {icon:"🌎",text:"Aprende 5 palabras nuevas en inglés y úsalas en oraciones",xp:45},
+  {icon:"🔬",text:"Haz una observación científica de algo en tu casa y escríbela",xp:40},
+  {icon:"🎹",text:"Practica piano por 20 minutos seguidos sin parar",xp:45},
+  {icon:"💰",text:"Calcula cuánto dinero necesitarías ahorrar en 3 meses para algo que quieres",xp:40},
+  {icon:"📚",text:"Lee durante 25 minutos sin interrupciones",xp:35},
+  {icon:"🎨",text:"Dibuja o crea algo con materiales que tengas en casa",xp:40},
+  {icon:"⚽",text:"Haz 30 minutos de actividad física intensa",xp:50},
+  {icon:"💻",text:"Crea algo en Scratch o aprende un truco nuevo en la computadora",xp:45},
+  {icon:"🌿",text:"Explica a alguien de tu familia algo que aprendiste esta semana",xp:60},
+  {icon:"🧮",text:"Aprende la tabla del 7 y recítala de memoria",xp:40},
+  {icon:"🌎",text:"Escribe un mini-diario de hoy en inglés (mínimo 5 oraciones)",xp:55},
+  {icon:"🔬",text:"Busca un video de ciencia y explica qué aprendiste",xp:40},
+  {icon:"💰",text:"Organiza tus ahorros y haz una tabla de ingresos y gastos",xp:50},
+  {icon:"🎹",text:"Aprende los primeros 8 compases de una canción nueva",xp:55},
+];
+
+const BADGES_DEF=[
+  {id:"first",   icon:"🌱",name:"Primera semilla",  desc:"Registra tu primera actividad",     cond:s=>s.acts>=1},
+  {id:"w7",      icon:"📅",name:"Semana completa",  desc:"7 actividades registradas",          cond:s=>s.acts>=7},
+  {id:"m30",     icon:"🗓️",name:"Mes de campeón",   desc:"30 actividades registradas",         cond:s=>s.acts>=30},
+  {id:"mat10",   icon:"🧮",name:"Genio matemático", desc:"10 sesiones de matemáticas",         cond:s=>(s.area["Matemáticas"]||0)>=10},
+  {id:"eng10",   icon:"🌎",name:"Políglota",        desc:"10 sesiones de inglés",              cond:s=>(s.area["Inglés"]||0)>=10},
+  {id:"sci5",    icon:"🔬",name:"Científico loco",  desc:"5 experimentos de ciencia",          cond:s=>(s.area["Ciencia"]||0)>=5},
+  {id:"pno8",    icon:"🎹",name:"Músico estrella",  desc:"8 sesiones de piano",                cond:s=>(s.area["Piano"]||0)>=8},
+  {id:"dep8",    icon:"⚽",name:"Atleta total",     desc:"8 sesiones de deporte",              cond:s=>(s.area["Deporte"]||0)>=8},
+  {id:"fin5",    icon:"💰",name:"Mini empresario",  desc:"5 sesiones de finanzas",             cond:s=>(s.area["Finanzas"]||0)>=5},
+  {id:"h10",     icon:"⏰",name:"10 horas",         desc:"Acumula 10 horas de estudio",        cond:s=>s.mins>=600},
+  {id:"h50",     icon:"⚡",name:"50 horas",         desc:"Acumula 50 horas de estudio",        cond:s=>s.mins>=3000},
+  {id:"n10",     icon:"💯",name:"Nota perfecta",    desc:"Obtén un 10 en una evaluación",      cond:s=>s.notaMax>=10},
+  {id:"avg9",    icon:"🌟",name:"Excelencia total", desc:"Promedio de notas ≥ 9.0",            cond:s=>s.notaC>0&&(s.notaS/s.notaC)>=9},
+  {id:"str7",    icon:"🔥",name:"Racha de fuego",   desc:"7 días seguidos de actividad",       cond:s=>s.rachaMax>=7},
+  {id:"str30",   icon:"👑",name:"Racha legendaria", desc:"30 días seguidos",                   cond:s=>s.rachaMax>=30},
+  {id:"allArea", icon:"🗺️",name:"Explorador total", desc:"Actividades en las 9 áreas",        cond:s=>Object.keys(s.area).length>=9},
+  {id:"reto10",  icon:"🎯",name:"Reto maestro",     desc:"Completa 10 retos diarios",          cond:s=>s.retosOk>=10},
+  {id:"shop1",   icon:"🛒",name:"Primer canje",     desc:"Canjea tu primer premio",            cond:s=>s.canjes>=1},
+  {id:"hogar1",  icon:"🧹",name:"Primera tarea",    desc:"Haz tu primera tarea del hogar",      cond:s=>s.hActs>=1},
+  {id:"hogar5",  icon:"🏠",name:"Ayudante estrella",desc:"5 tareas del hogar completadas",      cond:s=>s.hActs>=5},
+  {id:"hogar20", icon:"💪",name:"Súper ayudante",   desc:"20 tareas del hogar completadas",     cond:s=>s.hActs>=20},
+  {id:"earn10",  icon:"💵",name:"Primer sueldo",    desc:"Gana $10.000 en tareas",              cond:s=>s.hGanado>=10000},
+  {id:"earn50",  icon:"🤑",name:"Emprendedor",      desc:"Gana $50.000 en tareas",              cond:s=>s.hGanado>=50000},
+];
+
+const MISIONES_DEF=[
+  {id:"m1",icon:"🧮",name:"Reto matemático",    desc:"3 sesiones de matemáticas esta semana",    xp:50, cond:(s,a)=>countW(a,"Matemáticas")>=3},
+  {id:"m2",icon:"🌎",name:"Semana en inglés",   desc:"Inglés 4 días esta semana",                xp:60, cond:(s,a)=>countW(a,"Inglés")>=4},
+  {id:"m3",icon:"🔬",name:"Científico",         desc:"1 experimento de ciencia esta semana",     xp:40, cond:(s,a)=>countW(a,"Ciencia")>=1},
+  {id:"m4",icon:"🎹",name:"Músico constante",   desc:"Piano 3 veces esta semana",                xp:45, cond:(s,a)=>countW(a,"Piano")>=3},
+  {id:"m5",icon:"💰",name:"Mini empresario",    desc:"1 sesión de finanzas esta semana",         xp:35, cond:(s,a)=>countW(a,"Finanzas")>=1},
+  {id:"m6",icon:"⚽",name:"Cuerpo activo",      desc:"2 sesiones de deporte esta semana",        xp:40, cond:(s,a)=>countW(a,"Deporte")>=2},
+  {id:"m7",icon:"🌈",name:"Semana perfecta",    desc:"Actividades 5 días esta semana",           xp:100,cond:(s,a)=>daysW(a)>=5},
+  {id:"m8",icon:"💡",name:"Multi-sabio",        desc:"4 áreas diferentes esta semana",           xp:70, cond:(s,a)=>areasW(a)>=4},
+  {id:"m9",icon:"🧹",name:"Ayudante semanal",  desc:"3 tareas del hogar esta semana",           xp:60, cond:(s,a)=>s.hActsSemana>=3},
+];
+
+const DEFAULT_REWARDS=[
+  {id:"r1",icon:"🎮",name:"1 hora extra de videojuegos",cost:200},
+  {id:"r2",icon:"🍕",name:"Elegir la cena favorita",cost:150},
+  {id:"r3",icon:"🎬",name:"Ver una película en familia",cost:180},
+  {id:"r4",icon:"🧁",name:"Postre especial",cost:100},
+  {id:"r5",icon:"🏞️",name:"Salida a un parque / aventura",cost:300},
+];
+
+// ═══════════════════════════════ STATE ═══════════════════════════════════════
+let state={xp:0,coins:0,acts:0,mins:0,area:{},notaS:0,notaC:0,notaMax:0,
+           rachaActual:0,rachaMax:0,lastDay:null,unlockedBadges:[],
+           misionesDone:[],retoHoy:null,retoFecha:null,retoHoyDone:false,retosOk:0,canjes:0,canjes_spent:0,
+           hGanado:0,hPendiente:0,hActs:0,hActsSemana:0,lastWeek:null};
+let activities=[];
+let rewards=[];
+let customMisiones=[];
+let hogarActs=[];
+let pagosHist=[];
+let tareasCustom=[];
+let selectedTarea=null;
+let humor="";
+
+function save(){
+  try{localStorage.setItem("mg_s",JSON.stringify(state));
+      localStorage.setItem("mg_a",JSON.stringify(activities));
+      localStorage.setItem("mg_r",JSON.stringify(rewards));
+      localStorage.setItem("mg_h",JSON.stringify(hogarActs));
+      localStorage.setItem("mg_ht",JSON.stringify(tareasCustom));
+      localStorage.setItem("mg_pagos",JSON.stringify(pagosHist));}catch(e){}
+}
+function saveCustom(){
+  try{localStorage.setItem("mg_cm",JSON.stringify(customMisiones));}catch(e){}
+}
+function load(){
+  try{
+    const s=localStorage.getItem("mg_s"),a=localStorage.getItem("mg_a"),r=localStorage.getItem("mg_r");
+    if(s)state=JSON.parse(s);
+    if(a)activities=JSON.parse(a);
+    if(r)rewards=JSON.parse(r); else rewards=[...DEFAULT_REWARDS];
+    const cm=localStorage.getItem("mg_cm");
+    if(cm)try{customMisiones=JSON.parse(cm);}catch(e){}
+    const hh=localStorage.getItem("mg_h");
+    if(hh)try{hogarActs=JSON.parse(hh);}catch(e){}
+    const ht=localStorage.getItem("mg_ht");
+    if(ht)try{tareasCustom=JSON.parse(ht);}catch(e){}
+    const ph=localStorage.getItem("mg_pagos");
+    if(ph)try{pagosHist=JSON.parse(ph);}catch(e){}
+  }catch(e){rewards=[...DEFAULT_REWARDS];}
+}
+
+// ═══════════════════════════════ HELPERS ═════════════════════════════════════
+function weekStart(){const d=new Date();d.setHours(0,0,0,0);const wd=d.getDay();d.setDate(d.getDate()-(wd===0?6:wd-1));return d}
+function countW(acts,area){const ws=weekStart();return acts.filter(a=>new Date(a.fecha)>=ws&&a.area===area).length}
+function daysW(acts){const ws=weekStart();return new Set(acts.filter(a=>new Date(a.fecha)>=ws).map(a=>a.fecha)).size}
+function areasW(acts){const ws=weekStart();return new Set(acts.filter(a=>new Date(a.fecha)>=ws).map(a=>a.area)).size}
+function getLevel(){let l=0;for(let i=0;i<LEVELS.length;i++)if(state.xp>=LEVELS[i].min)l=i;return l}
+function xpInfo(){
+  const l=getLevel(),next=l+1<LEVELS.length?LEVELS[l+1].min:LEVELS[l].min+2000;
+  const cur=state.xp-LEVELS[l].min,need=next-LEVELS[l].min;
+  return{pct:(cur/need)*100,cur,need};
+}
+function calcXP(mins,nota){return Math.max(Math.round(mins*1.5)+(nota>0?Math.round(nota*10):0),10)}
+function todayStr(){return new Date().toISOString().split("T")[0]}
+
+// ═══════════════════════════════ RETO DIARIO ═════════════════════════════════
+function getReto(){
+  const hoy=todayStr();
+  if(state.retoFecha===hoy&&state.retoHoy!==null)return;
+  // Different reto each day based on date
+  const seed=hoy.replace(/-/g,"").split("").reduce(function(a,c){return a*31+c.charCodeAt(0);},0);
+  const idx=Math.abs(seed)%RETOS.length;
+  state.retoHoy=idx; state.retoFecha=hoy; state.retoHoyDone=false; save();
+}
+function pedirOtroReto(){
+  // Cycle to next reto in list (skip current)
+  state.retoHoy=(state.retoHoy+1)%RETOS.length;
+  state.retoHoyDone=false;
+  save(); renderReto();
+  showToast("🎲 ¡Nuevo reto cargado!");
+}
+function renderReto(){
+  getReto();
+  const r=RETOS[state.retoHoy];
+  const done=state.retoHoyDone;
+  document.getElementById("retoIcon").textContent=r.icon;
+  document.getElementById("retoText").textContent=r.text;
+  // XP label
+  document.getElementById("retoXP").textContent=done?"✅ ¡Completado! +"+r.xp+" XP":"+"+r.xp+" XP al completarlo";
+  // Main action button
+  const btnComp=document.getElementById("retoBtnCompletar");
+  const btnOtro=document.getElementById("retoBtnOtro");
+  if(done){
+    btnComp.textContent="✅ ¡Completado!";
+    btnComp.disabled=true;
+    btnComp.style.opacity="0.5";
+    if(btnOtro){btnOtro.style.display="inline-flex";}
+  } else {
+    btnComp.textContent="¡Lo hice! ✅";
+    btnComp.disabled=false;
+    btnComp.style.opacity="1";
+    if(btnOtro){btnOtro.style.display="none";}
+  }
+}
+function completarReto(){
+  if(state.retoHoyDone)return;
+  const r=RETOS[state.retoHoy];
+  state.retoHoyDone=true;
+  const oldLv=getLevel();
+  state.xp+=r.xp; state.coins+=r.xp; state.retosOk++;
+  // Registrar en el historial como tipo "reto"
+  activities.unshift({
+    fecha:todayStr(), area:"Reto diario", actividad:r.text,
+    mins:0, recurso:"", apr:"", nota:0, humor:"", xp:r.xp,
+    tipo:"reto", icon:r.icon
+  });
+  save(); checkBadges(); checkMisiones();
+  if(getLevel()>oldLv)setTimeout(()=>showLU(getLevel()),400);
+  updateUI(); renderReto();
+  showToast("🎯 ¡Reto del día completado! +"+r.xp+" XP 🌿");
+}
+
+// ═══════════════════════════════ REGISTRAR ═══════════════════════════════════
+function registrar(){
+  const fecha=document.getElementById("f-fecha").value;
+  const area=document.getElementById("f-area").value;
+  const act=document.getElementById("f-actividad").value.trim();
+  const mins=parseInt(document.getElementById("f-minutos").value)||0;
+  const recurso=document.getElementById("f-recurso").value.trim();
+  const apr=document.getElementById("f-aprendizaje").value.trim();
+  const nota=parseFloat(document.getElementById("f-nota").value)||0;
+  if(!fecha||!area||!act||mins<1){showToast("⚠️ Completa fecha, área, actividad y minutos");return}
+  const xp=calcXP(mins,nota);
+  const oldLv=getLevel();
+  state.xp+=xp; state.coins+=xp; state.acts++; state.mins+=mins;
+  state.area[area]=(state.area[area]||0)+1;
+  if(nota>0){state.notaS+=nota;state.notaC++;if(nota>state.notaMax)state.notaMax=nota;}
+  // racha
+  const yest=new Date(fecha);yest.setDate(yest.getDate()-1);
+  const yStr=yest.toISOString().split("T")[0];
+  if(state.lastDay===yStr||state.lastDay===fecha){if(state.lastDay!==fecha)state.rachaActual++;}
+  else state.rachaActual=1;
+  state.lastDay=fecha;
+  if(state.rachaActual>state.rachaMax)state.rachaMax=state.rachaActual;
+  activities.unshift({fecha,area,actividad:act,mins,recurso,apr,nota,humor,xp});
+  save(); checkBadges(); checkMisiones();
+  if(getLevel()>oldLv)setTimeout(()=>showLU(getLevel()),400);
+  updateUI(); showToast("🚀 ¡+"+xp+" XP ganados! ¡Excelente, Migue!"); resetForm();
+}
+function resetForm(){
+  ["f-actividad","f-minutos","f-recurso","f-aprendizaje"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("f-area").value="";
+  document.getElementById("f-nota").value=0;
+  document.getElementById("notaDisplay").textContent="—";
+  document.getElementById("notaDisplay").style.color="var(--text3)";
+  document.querySelectorAll(".humor-btn").forEach(b=>b.classList.remove("selected"));
+  humor="";
+}
+
+// ═══════════════════════════════ RENDER ══════════════════════════════════════
+function updateUI(){
+  const lv=getLevel(),lvd=LEVELS[lv],xi=xpInfo();
+  document.getElementById("xpBar").style.width=Math.min(xi.pct,100)+"%";
+  document.getElementById("xpLbl").textContent=state.xp+" XP";
+  document.getElementById("lvPill").textContent=`NIVEL ${lv+1} — ${lvd.name} ${lvd.emoji}`;
+  document.getElementById("avatarEl").textContent=lvd.emoji;
+  document.getElementById("heroSub").textContent=
+    `${lvd.emoji} ¡Hola Migue! ${state.rachaActual>1?"🔥 Llevas "+state.rachaActual+" días seguidos. ¡Imparable!":"¿Listo para aprender algo increíble hoy?"}`;
+  document.getElementById("streakNum").textContent=state.rachaActual;
+  document.getElementById("sXP").textContent=state.xp;
+  document.getElementById("sActs").textContent=state.acts;
+  document.getElementById("sHoras").textContent=Math.round(state.mins/60*10)/10+"h";
+  document.getElementById("sMonedas").textContent=state.coins;
+  document.getElementById("tMonedas").textContent=state.coins;
+  renderHogar();
+  renderHistorial();renderProgreso();renderBadges();renderMisiones();renderTienda();renderReto();
+}
+
+function renderHistorial(){
+  const el=document.getElementById("actList");
+  if(!activities.length){el.innerHTML='<div style="text-align:center;color:var(--text3);padding:32px;font-size:0.9rem">¡Registra tu primera actividad! 🌱</div>';return;}
+  el.innerHTML=activities.slice(0,80).map(function(a,i){
+    const isReto=a.tipo==="reto";
+    if(isReto){
+      return"<div class=\"activity-item\" style=\"border-left:3px solid var(--g3);background:#f0fdf4\">"
+        +"<div style=\"font-size:1.2rem;flex-shrink:0\">"+(a.icon||"🎯")+"</div>"
+        +"<div style=\"flex:1\"><div class=\"act-name\" style=\"color:var(--g3)\">🌟 Reto del día</div>"
+        +"<div class=\"act-meta\">"+a.actividad+"</div>"
+        +"<div class=\"act-meta\">"+a.fecha+"</div></div>"
+        +"<div class=\"act-xp\">+"+a.xp+" XP</div>"
+        +"<button class=\"btn-del-act\" onclick=\"confirmDeleteAct("+i+")\" title=\"Borrar\">🗑️</button>"
+        +"</div>";
+    }
+    const col=ACOLORS[a.area]||"#69f0ae";
+    const nc=a.nota>=8?"n-high":a.nota>=6?"n-mid":a.nota>0?"n-low":"";
+    const nh=a.nota>0?"<span class=\"nota-chip "+nc+"\">"+a.nota+"</span>":"<span style=\"color:var(--text3);font-size:0.72rem\">—</span>";
+    return"<div class=\"activity-item\">"
+      +"<div class=\"dot\" style=\"background:"+col+"\"></div>"
+      +"<div style=\"flex:1\"><div class=\"act-name\">"+a.actividad+" "+(a.humor||"")+"</div>"
+      +"<div class=\"act-meta\">"+(AICONS[a.area]||"")+" "+a.area+" · "+a.mins+" min · "+a.fecha+"</div></div>"
+      +"<div class=\"act-xp\">+"+a.xp+" XP</div>"+nh
+      +"<button class=\"btn-del-act\" onclick=\"confirmDeleteAct("+i+")\" title=\"Borrar\">🗑️</button>"
+      +"</div>";
+  }).join("");
+}
+function confirmDeleteAct(i){
+  const a=activities[i];
+  const msg=a.tipo==="reto"
+    ?"¿Borrar este reto del historial?\nSe descontarán "+a.xp+" XP y podrás completarlo de nuevo."
+    :"¿Borrar \""+a.actividad+"\"?\nSe descontarán "+a.xp+" XP y monedas.";
+  if(!confirm(msg))return;
+  deleteAct(i);
+}
+function deleteAct(i){
+  const a=activities[i];
+  state.xp=Math.max(0,state.xp-a.xp);
+  state.coins=Math.max(0,state.coins-a.xp);
+  if(a.tipo==="reto"){
+    // Reto: revert retosOk counter and allow re-completing today
+    state.retosOk=Math.max(0,state.retosOk-1);
+    if(state.retoFecha===a.fecha) state.retoHoyDone=false;
+  } else {
+    state.acts=Math.max(0,state.acts-1);
+    state.mins=Math.max(0,state.mins-a.mins);
+    if(state.area[a.area]) state.area[a.area]=Math.max(0,state.area[a.area]-1);
+    if(a.nota>0){
+      state.notaS=Math.max(0,state.notaS-a.nota);
+      state.notaC=Math.max(0,state.notaC-1);
+      const rest=activities.filter(function(_,j){return j!==i;}).filter(function(x){return x.nota>0;});
+      state.notaMax=rest.length?Math.max.apply(null,rest.map(function(x){return x.nota;})):0;
+    }
+  }
+  activities.splice(i,1);
+  save(); updateUI(); renderReto();
+  showToast("🗑️ "+(a.tipo==="reto"?"Reto eliminado — ya puedes completarlo de nuevo":"Actividad eliminada"));
+}
+
+function renderProgreso(){
+  // Bar chart — last 7 days
+  const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().split("T")[0]);}
+  const dayMins=days.map(d=>activities.filter(a=>a.fecha===d).reduce((s,a)=>s+a.mins,0));
+  const maxM=Math.max(...dayMins,1);
+  const dayNames=["Lu","Ma","Mi","Ju","Vi","Sá","Do"];
+  const chartEl=document.getElementById("weekChart");
+  if(dayMins.every(v=>v===0)){chartEl.innerHTML='<div class="chart-empty" style="width:100%">Aún no hay actividades esta semana 🌱</div>';return}
+  chartEl.innerHTML=days.map((d,i)=>{
+    const pct=Math.round((dayMins[i]/maxM)*100);
+    const lbl=dayNames[new Date(d+"T12:00:00").getDay()===0?6:new Date(d+"T12:00:00").getDay()-1];
+    return`<div class="bar-col">
+      ${dayMins[i]>0?`<div class="bar-val">${dayMins[i]}'</div>`:""}
+      <div class="bar" style="height:${Math.max(pct,2)}%"></div>
+      <div class="bar-lbl">${lbl}</div>
+    </div>`;
+  }).join("");
+
+  // Area list
+  const areas=Object.keys(ACOLORS);
+  const maxA=Math.max(1,...areas.map(a=>state.area[a]||0));
+  document.getElementById("areaList").innerHTML=areas.map(a=>{
+    const cnt=state.area[a]||0;
+    const pct=Math.round((cnt/maxA)*100);
+    const m=activities.filter(x=>x.area===a).reduce((s,x)=>s+x.mins,0);
+    const ns=activities.filter(x=>x.area===a&&x.nota>0);
+    const avg=ns.length?(ns.reduce((s,x)=>s+x.nota,0)/ns.length).toFixed(1):"—";
+    return`<div class="area-row">
+      <div class="area-header">
+        <div class="area-name">${AICONS[a]||""} ${a}</div>
+        <div class="area-stats-txt">${cnt} ses · ${Math.round(m/60*10)/10}h · Nota: ${avg}</div>
+      </div>
+      <div class="area-track"><div class="area-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join("");
+}
+
+function renderBadges(){
+  document.getElementById("badgesGrid").innerHTML=BADGES_DEF.map(b=>{
+    const ok=state.unlockedBadges.includes(b.id);
+    return`<div class="badge ${ok?"unlocked":"locked"}">
+      ${ok?'<div class="badge-check">✓</div>':""}
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-desc">${b.desc}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderMisiones(){
+  const allM=MISIONES_DEF.concat(customMisiones);
+  const nDef=MISIONES_DEF.length;
+  document.getElementById("misionesList").innerHTML=allM.map(function(m,i){
+    const done=state.misionesDone.includes(m.id);
+    const isCustom=i>=nDef;
+    const delBtn=isCustom?"<button class=\"btn-del-act\" onclick=\"deleteCustomMision("+(i-nDef+")\" title=\"Borrar\" style=\"margin-top:3px\">🗑️</button>"):"";
+    const custTag=isCustom?"<span style=\"font-size:0.62rem;color:var(--text3);background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:7px;margin-left:5px\">custom</span>":"";
+    return"<div class=\"mision "+(done?"done":"")+"\"><div class=\"mision-icon\">"+m.icon+"</div>"
+      +"<div class=\"mision-body\"><div class=\"mision-name\">"+m.name+custTag+"</div>"
+      +"<div class=\"mision-desc\">"+m.desc+"</div></div>"
+      +"<div class=\"mision-right\"><div class=\"mision-xp\">+"+m.xp+" XP</div>"
+      +"<div class=\"mision-check\">"+(done?"✅":"⬜")+"</div>"+delBtn+"</div></div>";
+  }).join("");
+  // add-form (plain HTML, no template literals)
+  const form="<div style=\"margin-top:16px;background:var(--card);border:1.5px dashed rgba(0,255,135,0.2);border-radius:14px;padding:14px\">"
+    +"<div style=\"font-family:'Fredoka One',cursive;font-size:0.9rem;color:var(--g1);margin-bottom:10px\">➕ Crear misión personalizada</div>"
+    +"<div style=\"display:grid;grid-template-columns:60px 1fr;gap:8px;margin-bottom:8px\">"
+    +"<div><label style=\"font-size:0.7rem;color:var(--text2);font-weight:700;display:block;margin-bottom:3px\">Emoji</label>"
+    +"<input type=\"text\" id=\"mi-icon\" placeholder=\"🎯\" maxlength=\"4\" style=\"width:100%;background:var(--bg2);border:1px solid rgba(0,255,135,0.2);color:var(--text);font-family:'Nunito',sans-serif;font-size:0.88rem;padding:8px;border-radius:9px;outline:none\"></div>"
+    +"<div><label style=\"font-size:0.7rem;color:var(--text2);font-weight:700;display:block;margin-bottom:3px\">Nombre</label>"
+    +"<input type=\"text\" id=\"mi-name\" placeholder=\"ej: Semana de ciencia\" style=\"width:100%;background:var(--bg2);border:1px solid rgba(0,255,135,0.2);color:var(--text);font-family:'Nunito',sans-serif;font-size:0.88rem;padding:8px;border-radius:9px;outline:none\"></div></div>"
+    +"<div style=\"display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:10px\">"
+    +"<div><label style=\"font-size:0.7rem;color:var(--text2);font-weight:700;display:block;margin-bottom:3px\">Descripción</label>"
+    +"<input type=\"text\" id=\"mi-desc\" placeholder=\"ej: 3 experimentos esta semana\" style=\"width:100%;background:var(--bg2);border:1px solid rgba(0,255,135,0.2);color:var(--text);font-family:'Nunito',sans-serif;font-size:0.88rem;padding:8px;border-radius:9px;outline:none\"></div>"
+    +"<div><label style=\"font-size:0.7rem;color:var(--text2);font-weight:700;display:block;margin-bottom:3px\">XP</label>"
+    +"<input type=\"number\" id=\"mi-xp\" placeholder=\"50\" min=\"10\" max=\"500\" style=\"width:100%;background:var(--bg2);border:1px solid rgba(0,255,135,0.2);color:var(--text);font-family:'Nunito',sans-serif;font-size:0.88rem;padding:8px;border-radius:9px;outline:none\"></div></div>"
+    +"<button onclick=\"addCustomMision()\" style=\"background:linear-gradient(135deg,var(--g3),var(--g5));color:#fff;border:none;font-family:'Fredoka One',cursive;font-size:0.88rem;padding:9px 20px;border-radius:20px;cursor:pointer;width:100%\">🌿 Agregar misión</button></div>";
+  document.getElementById("misionesList").insertAdjacentHTML("beforeend",form);
+}
+function addCustomMision(){
+  const icon=(document.getElementById("mi-icon").value.trim())||"🎯";
+  const name=document.getElementById("mi-name").value.trim();
+  const desc=document.getElementById("mi-desc").value.trim();
+  const xp=parseInt(document.getElementById("mi-xp").value)||50;
+  if(!name||!desc){showToast("⚠️ Completa nombre y descripción");return;}
+  customMisiones.push({id:"cm"+Date.now(),icon:icon,name:name,desc:desc,xp:xp,cond:function(){return false;}});
+  saveCustom();renderMisiones();
+  showToast("🎯 ¡Misión agregada!");
+}
+function deleteCustomMision(i){
+  if(!confirm("¿Borrar esta misión personalizada?"))return;
+  customMisiones.splice(i,1);saveCustom();renderMisiones();
+  showToast("🗑️ Misión eliminada");
+}
+
+function renderTienda(){
+  const el=document.getElementById("rewardsGrid");
+  if(!rewards.length){el.innerHTML='<div style="text-align:center;color:var(--text3);padding:32px;grid-column:1/-1;font-size:0.9rem">Agrega premios para que Migue los canjee 🎁</div>';return}
+  el.innerHTML=rewards.map((r,i)=>`
+    <div class="reward-card">
+      <button class="btn-delete-reward" onclick="deleteReward(${i})">✕</button>
+      <div class="reward-icon">${r.icon}</div>
+      <div class="reward-name">${r.name}</div>
+      <div class="reward-cost">🪙 ${r.cost}</div>
+      <button class="btn-canjear" onclick="canjear(${i})" ${state.coins<r.cost?"disabled":""}>
+        ${state.coins>=r.cost?"¡Canjear!":"Sin monedas"}
+      </button>
+    </div>`).join("");
+}
+
+// ═══════════════════════════════ BADGES & MISIONES ═══════════════════════════
+function checkBadges(){
+  let newOnes=[];
+  BADGES_DEF.forEach(b=>{
+    if(!state.unlockedBadges.includes(b.id)&&b.cond(state)){
+      state.unlockedBadges.push(b.id);newOnes.push(b);
+    }
+  });
+  if(newOnes.length){save();setTimeout(()=>showToast("🏅 ¡Logro desbloqueado: "+newOnes[0].name+"!"),700);}
+}
+function checkMisiones(){
+  MISIONES_DEF.forEach(m=>{
+    if(!state.misionesDone.includes(m.id)&&m.cond(state,activities)){
+      state.misionesDone.push(m.id);state.xp+=m.xp;state.coins+=m.xp;
+      setTimeout(()=>showToast("🎯 ¡Misión completada! +"+m.xp+" XP bonus!"),1400);
+    }
+  });
+  save();
+}
+
+// ═══════════════════════════════ TIENDA ══════════════════════════════════════
+// openRewardModal defined above with emoji init
+function closeRewardModal(){document.getElementById("rewardModal").classList.remove("show")}
+function saveReward(){
+  const icon=document.getElementById("r-icon").value.trim()||"🎁";
+  const name=document.getElementById("r-name").value.trim();
+  const cost=parseInt(document.getElementById("r-cost").value)||100;
+  if(!name){showToast("⚠️ Escribe el nombre del premio");return}
+  rewards.push({id:"r"+Date.now(),icon,name,cost});
+  save();renderTienda();closeRewardModal();
+  document.getElementById("r-icon").value="";document.getElementById("r-name").value="";document.getElementById("r-cost").value="";
+  showToast("🎁 ¡Premio agregado!");
+}
+function deleteReward(i){rewards.splice(i,1);save();renderTienda()}
+function canjear(i){
+  const r=rewards[i];
+  if(state.coins<r.cost){showToast("🪙 ¡No tienes suficientes monedas!");return}
+  if(!confirm("¿Canjear \""+r.name+"\" por 🪙"+r.cost+"?"))return;
+  state.coins-=r.cost;
+  state.canjes++;
+  state.canjes_spent=(state.canjes_spent||0)+r.cost;
+  save();checkBadges();updateUI();
+  showToast("🎉 ¡Premio canjeado: "+r.name+"! Avísale a mamá 🎁");
+}
+
+// ═══════════════════════════════ UI UTILS ════════════════════════════════════
+function showTab(name,btn){
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  btn.classList.add("active");
+  updateUI();
+  if(name==="hogar"){const hf=document.getElementById("h-fecha");if(hf&&!hf.value)hf.value=todayStr();renderTareasGrid();}
+  if(name==="backup"){renderBackupStats();}
+}
+function selHumor(btn,val){
+  document.querySelectorAll(".humor-btn").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");humor=val;
+}
+function updateNota(val){
+  const el=document.getElementById("notaDisplay");
+  if(parseFloat(val)===0){el.textContent="—";el.style.color="var(--text3)";return}
+  el.textContent=parseFloat(val).toFixed(1);
+  el.style.color=val>=8?"var(--g1)":val>=6?"var(--gold)":"var(--orange)";
+}
+let toastT;
+function showToast(msg){
+  const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove("show"),3200);
+}
+function showLU(lv){
+  const d=LEVELS[lv];
+  document.getElementById("luEmoji").textContent=d.emoji;
+  document.getElementById("luTitle").textContent=`¡Nivel ${lv+1}! ${d.emoji}`;
+  document.getElementById("luSub").textContent=`¡Ahora eres ${d.name}, Migue! 🎉 ¡Sigue así que eres increíble!`;
+  document.getElementById("luOverlay").classList.add("show");
+}
+function closeLU(){document.getElementById("luOverlay").classList.remove("show")}
+
+function openLevelGuide(){
+  const el=document.getElementById("lgContent");
+  el.innerHTML=LEVELS.map(function(l,i){
+    const next=i+1<LEVELS.length?LEVELS[i+1].min:l.min+2000;
+    const cur=getLevel()===i;
+    return"<div style=\"background:"+(cur?"rgba(26,140,80,0.08)":"#f8fdf9")+";border:1px solid "+(cur?"rgba(0,255,135,0.35)":"rgba(255,255,255,0.07)")+";border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px\">"
+      +"<span style=\"font-size:1.4rem\">"+l.emoji+"</span>"
+      +"<div style=\"flex:1\"><div style=\"font-weight:800;font-size:0.88rem;color:"+(cur?"var(--g1)":"var(--text)")+"\">"+l.name+(cur?" ← Migue está aquí":"")+"</div>"
+      +"<div style=\"font-size:0.7rem;color:var(--text3)\">"+l.min+" – "+(next-1)+" XP</div></div>"
+      +"<div style=\"font-family:'Fredoka One',cursive;font-size:0.82rem;color:var(--text3)\">"+l.min+" XP</div></div>";
+  }).join("");
+  document.getElementById("lgModal").style.display="flex";
+}
+function closeLevelGuide(){document.getElementById("lgModal").style.display="none";}
+
+
+// ═══════════════════════════════ HOGAR ═══════════════════════════════════════
+const TAREAS=[
+  {id:"bano",    icon:"🚿",name:"Lavar baño",              val:10000},
+  {id:"vidrios", icon:"🪟",name:"Limpiar vidrios",         val:10000},
+  {id:"balcon",  icon:"🌬️",name:"Lavar balcón",            val:10000},
+  {id:"ropa",    icon:"👕",name:"Lavar ropa + colgar",     val:5000},
+  {id:"doblar",  icon:"🧺",name:"Doblar ropa",             val:5000},
+  {id:"carro",   icon:"🚗",name:"Lavar carro",             val:20000},
+  {id:"loza",    icon:"🍽️",name:"Lavar loza + limpiar mesa",val:1000},
+  {id:"barrer",  icon:"🧹",name:"Barrer + trapear",        val:2000},
+  {id:"polvo",   icon:"✨",name:"Limpiar polvo",            val:1000},
+  {id:"tenis",   icon:"👟",name:"Lavar tenis",             val:2000},
+  {id:"paredes", icon:"🖌️",name:"Limpiar paredes",         val:2000},
+  {id:"plantas", icon:"🪴",name:"Agua a las plantas",      val:1000},
+];
+
+function fmtCOP(n){return "$"+n.toLocaleString("es-CO");}
+
+function addTareaCustom(){
+  var icon=(document.getElementById("nt-icon").value.trim())||"🧹";
+  var nombre=document.getElementById("nt-nombre").value.trim();
+  var valor=parseInt(document.getElementById("nt-valor").value)||0;
+  if(!nombre||valor<1){showToast("⚠️ Completa nombre y valor");return;}
+  tareasCustom.push({id:"tc"+Date.now(),icon:icon,name:nombre,val:valor});
+  document.getElementById("nt-icon").value="";
+  document.getElementById("nt-nombre").value="";
+  document.getElementById("nt-valor").value="";
+  save();renderTareasGrid();
+  showToast(icon+" Actividad '"+nombre+"' agregada ✅");
+}
+function deleteTareaCustom(id){
+  tareasCustom=tareasCustom.filter(function(t){return t.id!==id;});
+  if(selectedTarea&&selectedTarea.id===id)selectedTarea=null;
+  save();renderTareasGrid();
+}
+function renderTareasGrid(){
+  const el=document.getElementById("tareasGrid");
+  if(!el)return;
+  var allTareas=TAREAS.concat(tareasCustom);
+  el.innerHTML=allTareas.map(function(t){
+    var sel=selectedTarea&&selectedTarea.id===t.id;
+    return "<button class=\"tarea-btn"+(sel?" selected":"")+"\" onclick=\"selTarea('"+t.id+"')\">"
+      +"<span class=\"tarea-icon\">"+t.icon+"</span>"
+      +"<span class=\"tarea-info\"><span class=\"tarea-name\">"+t.name+"</span>"
+      +"<span class=\"tarea-val\">"+fmtCOP(t.val)+"</span></span></button>";
+  }).join("");
+  const prev=document.getElementById("h-selected-preview");
+  const pt=document.getElementById("h-preview-text");
+  const pv=document.getElementById("h-preview-val");
+  if(selectedTarea){
+    if(prev){prev.style.display="flex";}
+    if(pt)pt.textContent=selectedTarea.icon+" "+selectedTarea.name;
+    if(pv)pv.textContent=fmtCOP(selectedTarea.val);
+  } else {
+    if(prev){prev.style.display="none";}
+  }
+}
+
+function selTarea(id){
+  var allT=TAREAS.concat(tareasCustom);
+  selectedTarea=selectedTarea&&selectedTarea.id===id?null:allT.find(function(t){return t.id===id;});
+  renderTareasGrid();
+}
+
+function registrarHogar(){
+  if(!selectedTarea){showToast("⚠️ Selecciona una actividad del hogar");return;}
+  const fecha=document.getElementById("h-fecha").value;
+  const nota=document.getElementById("h-nota").value.trim();
+  if(!fecha){showToast("⚠️ Selecciona la fecha");return;}
+  const act={id:"h"+Date.now(),tarea:selectedTarea.id,icon:selectedTarea.icon,
+    name:selectedTarea.name,val:selectedTarea.val,fecha:fecha,nota:nota,pagado:false};
+  hogarActs.unshift(act);
+  state.hGanado=(state.hGanado||0)+act.val;
+  state.hPendiente=(state.hPendiente||0)+act.val;
+  state.hActs=(state.hActs||0)+1;
+  // count this week
+  const ws=weekStart();
+  state.hActsSemana=hogarActs.filter(function(a){return !a.pagado&&new Date(a.fecha)>=ws;}).length;
+  // XP bonus por tarea del hogar
+  const xpBonus=Math.round(act.val/500);
+  state.xp+=xpBonus; state.coins+=xpBonus;
+  save(); checkBadges(); checkMisiones(); updateUI(); renderHogar();
+  showToast("🏠 Tarea registrada! +"+fmtCOP(act.val)+" pendiente · +"+xpBonus+" XP bonus");
+  selectedTarea=null;
+  document.getElementById("h-nota").value="";
+  renderTareasGrid();
+}
+
+function registrarPago(){
+  const monto=parseInt(document.getElementById("h-pago").value)||0;
+  if(monto<=0){showToast("⚠️ Ingresa el monto pagado");return;}
+  // Marcar tareas como pagadas (FIFO) hasta cubrir el monto
+  let restante=monto;
+  hogarActs.forEach(function(a){
+    if(!a.pagado&&restante>0){
+      if(restante>=a.val){a.pagado=true;restante-=a.val;}
+    }
+  });
+  state.hPendiente=Math.max(0,(state.hPendiente||0)-monto);
+  pagosHist.unshift({fecha:todayStr(),monto:monto});
+  save(); checkBadges(); updateUI(); renderHogar();
+  document.getElementById("h-pago").value="";
+  showToast("💵 Pago de "+fmtCOP(monto)+" registrado ✅");
+}
+
+function deleteHogar(id){
+  const idx=hogarActs.findIndex(function(a){return a.id===id;});
+  if(idx<0)return;
+  const a=hogarActs[idx];
+  if(!confirm("¿Borrar esta tarea?"))return;
+  if(!a.pagado)state.hPendiente=Math.max(0,(state.hPendiente||0)-a.val);
+  state.hGanado=Math.max(0,(state.hGanado||0)-a.val);
+  state.hActs=Math.max(0,(state.hActs||0)-1);
+  hogarActs.splice(idx,1);
+  save(); updateUI(); renderHogar();
+  showToast("🗑️ Tarea eliminada");
+}
+
+function renderHogar(){
+  // summary
+  const gEl=document.getElementById("h-ganado");
+  const pEl=document.getElementById("h-pendiente");
+  if(gEl)gEl.textContent=fmtCOP(state.hGanado||0);
+  if(pEl)pEl.textContent=fmtCOP(state.hPendiente||0);
+  // list
+  const el=document.getElementById("hogarList");
+  if(!el)return;
+  if(!hogarActs.length){
+    el.innerHTML="<div style=\"text-align:center;color:var(--text3);padding:24px;font-size:0.88rem\">Aún no hay tareas registradas 🌿</div>";
+    return;
+  }
+  el.innerHTML=hogarActs.slice(0,60).map(function(a){
+    return "<div class=\"hogar-item"+(a.pagado?" pagado":"")+"\">"
+
+      +"<div class=\"hi-icon\">"+a.icon+"</div>"
+      +"<div class=\"hi-info\"><div class=\"hi-name\">"+a.name+"</div>"
+      +"<div class=\"hi-meta\">"+a.fecha+(a.nota?" · "+a.nota:"")+"</div></div>"
+      +"<div class=\"hi-val\">"+fmtCOP(a.val)+"</div>"
+      +"<span class=\"hi-status "+(a.pagado?"paid":"pend")+"\">"+(a.pagado?"✅ Pagado":"⏳ Pendiente")+"</span>"
+      +"<button class=\"btn-del-act\" onclick=\"deleteHogar('"+a.id+"')\" title=\"Borrar\">🗑️</button>"
+      +"</div>";
+  }).join("");
+  renderTareasGrid();
+}
+
+
+// ═══════════════════════════════ EMOJI PICKER ════════════════════════════════
+const EMOJI_OPTIONS=["🎮","🍕","🎬","🍦","🧁","🏞️","🎯","🏆","🎁","🎨","📚","🎵",
+  "🚀","⚽","🎸","🏊","🎪","🍫","🎠","🌮","🍔","🧸","🎭","🎲","🏄","🚴","🎳","🎰"];
+function renderEmojiPickerR(){
+  const el=document.getElementById("emojiPickerR");
+  if(!el)return;
+  const cur=document.getElementById("r-icon").value.trim();
+  el.innerHTML=EMOJI_OPTIONS.map(function(e){
+    var bg=cur===e?"rgba(26,140,80,0.12)":"#f4faf6";
+    var bd=cur===e?"1.5px solid var(--g3)":"1px solid rgba(26,140,80,0.15)";
+    return "<button onclick=\"pickEmoji('"+e+"')\" style=\"background:"+bg+";border:"+bd+";border-radius:8px;padding:5px;font-size:1.1rem;cursor:pointer;transition:all .12s\">"+e+"</button>";
+  }).join("");
+}
+function pickEmoji(e){
+  document.getElementById("r-icon").value=e;
+  renderEmojiPickerR();
+}
+function syncEmojiPicker(v){renderEmojiPickerR();}
+function openRewardModal(){
+  document.getElementById("rewardModal").classList.add("show");
+  setTimeout(renderEmojiPickerR,50);
+}
+
+// ═══════════════════════════════ INIT ════════════════════════════════════════
+
+// ═══════════════════════════════ BACKUP ══════════════════════════════════════
+function exportarDatos(){
+  const data={
+    version:3,
+    exportado:new Date().toISOString(),
+    state:state,
+    activities:activities,
+    rewards:rewards,
+    hogarActs:hogarActs,
+    pagosHist:pagosHist,
+    customMisiones:customMisiones,
+    tareasCustom:tareasCustom
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  const fecha=new Date().toISOString().split("T")[0];
+  a.href=url; a.download="migue_backup_"+fecha+".json";
+  a.click(); URL.revokeObjectURL(url);
+  showToast("📥 Respaldo descargado ✅");
+}
+function importarDatos(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.state||!data.activities){
+        showToast("❌ Archivo inválido — no es un respaldo de Migue");return;
+      }
+      if(!confirm("¿Restaurar datos del respaldo del "+data.exportado.split("T")[0]+"?\nSe reemplazarán los datos actuales.")){
+        input.value="";return;
+      }
+      state=data.state;
+      activities=data.activities||[];
+      rewards=data.rewards||[...DEFAULT_REWARDS];
+      hogarActs=data.hogarActs||[];
+      pagosHist=data.pagosHist||[];
+      customMisiones=data.customMisiones||[];
+      tareasCustom=data.tareasCustom||[];
+      save();updateUI();renderBackupStats();
+      showToast("✅ Datos restaurados correctamente 🌿");
+    }catch(ex){showToast("❌ Error al leer el archivo");}
+    input.value="";
+  };
+  reader.readAsText(file);
+}
+function renderBackupStats(){
+  const el=document.getElementById("backupStats");
+  if(!el)return;
+  const items=[
+    ["📚","Actividades",activities.filter(function(a){return a.tipo!=="reto";}).length],
+    ["🎯","Retos completados",activities.filter(function(a){return a.tipo==="reto";}).length],
+    ["⭐","XP total",state.xp],
+    ["🏠","Tareas del hogar",hogarActs.length],
+    ["🏅","Logros",state.unlockedBadges.length],
+    ["💵","Total ganado hogar","$"+(state.hGanado||0).toLocaleString("es-CO")],
+  ];
+  el.innerHTML=items.map(function(it){
+    return"<div style=\"background:var(--card2);border-radius:9px;padding:8px 10px;display:flex;align-items:center;gap:8px\">"
+      +"<span style=\"font-size:1.1rem\">"+it[0]+"</span>"
+      +"<div><div style=\"font-size:0.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px\">"+it[1]+"</div>"
+      +"<div style=\"font-family:'Fredoka One',cursive;font-size:1rem;color:var(--g3)\">"+it[2]+"</div></div>"
+      +"</div>";
+  }).join("");
+}
+
+load();
+if(!rewards.length)rewards=[...DEFAULT_REWARDS];
+
+// ── RECALCULAR XP/COINS DESDE EL HISTORIAL REAL ──────────────────────────────
+// Esto garantiza que XP y monedas siempre sean exactos,
+// sin importar cómo se borraron actividades anteriormente.
+(function(){
+  var totalXP=0, totalCoins=0, totalActs=0, totalMins=0;
+  var areaCount={}, notaS=0, notaC=0, notaMax=0;
+  activities.forEach(function(a){
+    totalXP+=a.xp||0;
+    totalCoins+=a.xp||0;
+    if(a.tipo!=="reto"){
+      totalActs++;
+      totalMins+=(a.mins||0);
+      if(a.area) areaCount[a.area]=(areaCount[a.area]||0)+1;
+      if(a.nota>0){notaS+=a.nota;notaC++;if(a.nota>notaMax)notaMax=a.nota;}
+    }
+  });
+  // Descontar lo canjeado en tienda
+  totalCoins=Math.max(0, totalCoins-(state.canjes_spent||0));
+  state.xp=totalXP;
+  state.coins=totalCoins;
+  state.acts=totalActs;
+  state.mins=totalMins;
+  state.area=areaCount;
+  state.notaS=notaS;
+  state.notaC=notaC;
+  state.notaMax=notaMax;
+  // retosOk = número de actividades tipo reto
+  state.retosOk=activities.filter(function(a){return a.tipo==="reto";}).length;
+  // Recalcular racha desde el historial real
+  if(activities.length===0){
+    state.rachaActual=0; state.rachaMax=0; state.lastDay=null;
+  } else {
+    // Obtener días únicos ordenados
+    var dias=[...new Set(activities.map(function(a){return a.fecha;}))].sort();
+    var racha=1, maxRacha=1;
+    for(var i=1;i<dias.length;i++){
+      var prev=new Date(dias[i-1]+"T12:00:00");
+      var curr=new Date(dias[i]+"T12:00:00");
+      var diff=Math.round((curr-prev)/(1000*60*60*24));
+      if(diff===1){racha++;if(racha>maxRacha)maxRacha=racha;}
+      else racha=1;
+    }
+    // Racha actual: ¿el último día fue hoy o ayer?
+    var ultimo=dias[dias.length-1];
+    var hoy=todayStr();
+    var ayer=new Date(); ayer.setDate(ayer.getDate()-1);
+    var ayerStr=ayer.toISOString().split("T")[0];
+    if(ultimo!==hoy && ultimo!==ayerStr) racha=0; // racha rota
+    state.rachaActual=racha;
+    state.rachaMax=maxRacha;
+    state.lastDay=ultimo;
+  }
+  save();
+})();
+
+document.getElementById("f-fecha").value=todayStr();
+// reset weekly missions at week start
+const ws=weekStart().toISOString().split("T")[0];
+if(state.lastWeek!==ws){state.misionesDone=[];state.lastWeek=ws;save();}
+updateUI();
+</script>
+
+<!-- LEVEL GUIDE MODAL -->
+<div id="lgModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.88);display:none;align-items:center;justify-content:center;z-index:400;padding:16px">
+  <div style="background:#ffffff;border:1px solid rgba(26,140,80,0.25);border-radius:24px;padding:24px;max-width:420px;width:100%;max-height:88vh;overflow-y:auto">
+    <div style="font-family:'Fredoka One',cursive;font-size:1.25rem;color:#1a8c50;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center">
+      📊 Guía de niveles
+      <button onclick="closeLevelGuide()" style="background:none;border:none;color:#8fc9a0;cursor:pointer;font-size:1.2rem">✕</button>
+    </div>
+    <div id="lgContent" style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px"></div>
+    <div style="font-size:0.74rem;color:#4a7a5a;border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;line-height:1.7">
+      💡 <b style="color:#3d6b4a">¿Cómo ganar XP?</b><br>
+      · Cada minuto de actividad = 1.5 XP<br>
+      · Nota 10 en evaluación = +100 XP extra<br>
+      · Reto diario completado = +50 XP<br>
+      · Misiones semanales = +35 a +100 XP bonus
+    </div>
+  </div>
+</div>
+</body>
+</html>
